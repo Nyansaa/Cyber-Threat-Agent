@@ -1,0 +1,94 @@
+---
+description: CTI agent project context, coding standards, and mentoring guidance
+alwaysApply: true
+---
+
+# Cyber Threat Intelligence Agent - Cursor Rules
+
+## Project Overview
+This is a Cyber Threat Intelligence (CTI) Agent built for a portfolio project targeting defense/intelligence roles at firms like Booz Allen Hamilton, Leidos, and MITRE. The agent researches cyber threats and produces structured threat briefs for analysts.
+
+## Developer Profile
+- Computer Science + Cybersecurity double major (senior, graduating May 2027)
+- Beginner-to-intermediate Python level - explain concepts clearly and do not skip steps
+- Background in ML/AI research (NASA anomaly detection, edge AI, computer vision)
+- Learning agentic AI, RAG, and LLM APIs actively via DataCamp
+- Goal: build a polished GitHub project to showcase at Booz Allen interviews
+
+## Tech Stack
+- Language: Python 3.10+
+- LLM: Claude API (Anthropic) - model: claude-opus-4-20250514
+- Agent framework: LangChain
+- Web search: DuckDuckGo (via langchain-community)
+- Vector DB (Part 3): ChromaDB
+- API layer (Part 4): FastAPI
+- Frontend (Part 4, optional): Streamlit
+- Environment: Cursor IDE, virtual environment (`venv`)
+
+## Project Structure
+```text
+cyber-threat-agent/
+|- .cursorrules
+|- .env
+|- .gitignore
+|- requirements.txt
+|- README.md
+|- agent/
+|  |- __init__.py
+|  |- core.py
+|  |- tools.py
+|  |- prompts.py
+|- rag/
+|  |- ingest.py
+|  |- retriever.py
+|- api/
+|  |- main.py
+|- data/
+|  |- sample_reports/
+`- briefs/
+```
+
+## Build Phases
+- Part 1 (current): Core Agent
+  - Set up environment, API keys, LangChain
+  - Build agent loop with Claude API
+  - Add DuckDuckGo web search tool
+- Part 2 (current): Structured Output
+  - Define JSON threat brief schema
+  - Prompt engineering for consistent output
+- Part 3 (after RAG DataCamp courses): RAG Integration
+  - ChromaDB vector store
+  - Ingest threat intelligence PDFs
+  - Retrieval-augmented generation
+- Part 4 (week 5-6): FastAPI Interface
+  - REST endpoint for threat queries
+  - Streamlit frontend (optional)
+- Part 5: GitHub and Documentation
+  - Clean README, demo GIF, deployment notes
+
+## Coding Standards
+- Always use `python-dotenv` to load API keys from `.env`; never hardcode keys
+- Never commit `.env` files or secrets
+- Add clear comments explaining what each function does and why
+- Use descriptive variable names; readability matters for portfolio quality
+- Handle errors gracefully with `try/except` and helpful error messages
+- Keep functions small and focused: one function, one job
+- Print progress updates so users can see the agent is working
+
+## How Cursor Should Help
+- Explain code in plain English when asked
+- Walk through setup steps one at a time; do not skip steps
+- When suggesting fixes, explain why the fix works
+- Point out portfolio improvements (for example, what would present better on GitHub)
+- Remind that `.env` files should never be committed
+- Suggest variable names and comments that match defense/cyber domain language
+
+## Key Terminology
+- CTI = Cyber Threat Intelligence
+- IoC = Indicator of Compromise
+- TTPs = Tactics, Techniques, and Procedures
+- MITRE ATT&CK = threat behavior framework used in defense/government
+- Threat actor = hacker group or nation-state attacker
+- Threat brief = structured analyst report on a specific threat
+- RAG = Retrieval Augmented Generation
+- Agentic AI = AI that plans and uses tools autonomously
