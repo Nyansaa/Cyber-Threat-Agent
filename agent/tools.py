@@ -9,6 +9,7 @@
 #   2. The FUNCTION — the actual Python code that runs when Claude calls the tool
 
 from langchain_community.tools import DuckDuckGoSearchRun
+from rag.retriever import search_documents
 
 # ─── TOOL DEFINITIONS ─────────────────────────────────────────────────────────
 # This is what we send to Claude via the API so it knows what tools are available.
@@ -31,6 +32,30 @@ TOOL_DEFINITIONS = [
                     "description": (
                         "The search query. Be specific — include threat name, "
                         "year, and context. Example: 'LockBit ransomware 2024 attack techniques TTPs'"
+                    )
+                }
+            },
+            "required": ["query"]
+        }
+    },
+    {
+        "name": "search_threat_intel_documents",
+        "description": (
+            "Search the internal threat intelligence document database. "
+            "This database contains official cybersecurity advisories from agencies "
+            "like CISA, FBI, NSA, and NCSC covering known threat actors, TTPs, IoCs, "
+            "and mitigation guidance. ALWAYS search this database FIRST before using "
+            "web_search — it contains authoritative, government-issued threat intel. "
+            "Use web_search to supplement with recent news after consulting this database."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": (
+                        "The search query. Be specific — include threat actors, "
+                        "TTPs, or sectors. Example: 'Iranian APT PLC critical infrastructure'"
                     )
                 }
             },
@@ -86,5 +111,7 @@ def run_tool(tool_name: str, tool_input: dict) -> str:
     """
     if tool_name == "web_search":
         return web_search(tool_input["query"])
+    elif tool_name == "search_threat_intel_documents":
+        return search_documents(tool_input["query"])
     else:
         return f"Unknown tool: {tool_name}"

@@ -1,0 +1,69 @@
+{
+  "threat_name": "LockBit Ransomware (LockBit 5.0 / 'ChuongDong')",
+  "threat_type": "Ransomware-as-a-Service (RaaS) / Double Extortion",
+  "summary": "LockBit is the most prolific ransomware franchise on record, operating since 2019 and now resurging with its most advanced iteration \u2014 LockBit 5.0 (codename 'ChuongDong') \u2014 released in September 2025, less than two years after Operation Cronos disrupted its infrastructure in February 2024. The new variant features a modular architecture, cross-platform targeting of Windows, Linux, and VMware ESXi environments, advanced anti-analysis and obfuscation techniques, and active exploitation of critical CVEs including a WSUS unauthenticated RCE (CVE-2025-59287) and SharePoint spoofing flaw (CVE-2025-49706). LockBit has joined a ransomware cartel alongside Qilin and DragonForce, amplifying its global targeting capacity against public sector and critical infrastructure organizations.",
+  "threat_actors": [
+    "LockBit (core group, originally 'ABCD' ransomware gang)",
+    "LockBit RaaS Affiliates (decentralized, financially motivated threat actors)",
+    "LockBit-Qilin-DragonForce Ransomware Cartel (active 2025)",
+    "LockBitSupp (suspected lead operator, identity partially unmasked post-Operation Cronos)"
+  ],
+  "targeted_sectors": [
+    "Government / Public Sector",
+    "Defense Industrial Base",
+    "Critical Infrastructure (Energy, Water, Transportation)",
+    "Healthcare",
+    "Finance and Banking",
+    "Manufacturing",
+    "Information Technology",
+    "Education"
+  ],
+  "attack_vectors": [
+    "Exploitation of CVE-2025-59287 \u2014 unauthenticated RCE via Windows Server Update Services (WSUS) deserialization flaw; used to push ransomware as fake Windows updates",
+    "Exploitation of CVE-2025-49706 / CVE-2025-53770 \u2014 SharePoint Server spoofing vulnerabilities enabling lateral movement and payload delivery",
+    "Phishing and spear-phishing emails delivering malicious attachments or links for initial access",
+    "RDP brute-force and credential stuffing against internet-exposed remote access infrastructure",
+    "VPN and firewall appliance exploitation (known unpatched CVEs in Fortinet, Citrix, and Pulse Secure products)",
+    "Living-off-the-land binaries (LOLBins) including abuse of defrag.exe and certutil.exe for evasion",
+    "DLL injection via NtMapViewOfSection and WriteProcessMemory to overwrite security product hooks in memory",
+    "Credential harvesting via fake Microsoft 365 sign-in portals with C2 callback (POST /api/validate)",
+    "Double extortion: file encryption combined with exfiltration to dedicated leak sites",
+    "Supply chain compromise through trusted third-party software and MSP access paths"
+  ],
+  "indicators_of_compromise": [
+    "SHA256: 7ea5afbc166c4e23498aa9747be81ceaf8dad90b8daa07a6e4644dc7c2277b82",
+    "SHA256: 180e93a091f8ab584a827da92c560c78f468c45f2539f73ab2deb308fb837b38",
+    "SHA256: 4dc06ecee904b9165fa699b026045c1b6408cc7061df3d2a7bc2b7b4f0879f4d",
+    "SHA256: 90b06f07eb75045ea3d4ba6577afc9b58078eafeb2cdd417e2a88d7ccf0c0273",
+    "SHA256: 98d8c7870c8e99ca6c8c25bb9ef79f71c25912fbb65698a9a6f22709b8ad34b6",
+    "SHA256: a7184bef39523bef32683ef7af440a5b2235e83e7fb83c6b7ee5f08286731892",
+    "Domain pattern: loginmicr*.cc (fake M365 phishing infrastructure)",
+    "Domain pattern: segy* (observed C2 domain prefix pattern)",
+    "C2 callback URI: POST /api/validate (credential harvesting stage)",
+    "C2 callback URI: POST /api/login (exfiltration of credentials: key, token, email, password)",
+    "C2 callback URI: POST /x.php (optional log hook, triggered on server status 'info')",
+    "File behavior: Rapid sequential file extension changes using dynamically generated 8-byte extensions (100 per execution cycle)",
+    "Process behavior: Abuse of defrag.exe as a LOLBin during encryption phase",
+    "Memory behavior: DLL unhooking via NtMapViewOfSection + WriteProcessMemory to evade EDR",
+    "Log evidence: System event logs, VSS shadow copies, and supporting forensic artifacts deleted post-execution",
+    "Ransom note dropped in all encrypted directories (filename varies by affiliate configuration)",
+    "CVE-2025-59287 exploitation indicators: Unusual WSUS traffic, unsigned update packages, lateral movement from WSUS server"
+  ],
+  "mitigations": [
+    "PATCH IMMEDIATELY: Apply Microsoft patches for CVE-2025-59287 (WSUS RCE) and CVE-2025-49706 / CVE-2025-53770 (SharePoint spoofing) \u2014 both are actively weaponized by LockBit affiliates",
+    "Restrict and harden WSUS: Disable or isolate WSUS servers from untrusted network segments; enforce signed update validation and monitor for unauthorized update packages",
+    "Implement network segmentation and zero-trust architecture to limit lateral movement post-initial compromise",
+    "Deploy EDR with behavioral detection tuned to flag defrag.exe execution outside maintenance windows, rapid file extension changes, and abnormal DLL memory mapping",
+    "Enable and enforce multi-factor authentication (MFA) on all remote access points including VPN, RDP, and cloud portals such as Microsoft 365",
+    "Block known LockBit 5.0 SHA256 hashes and domain patterns (loginmicr*.cc, segy*) at endpoint, proxy, and DNS layers",
+    "Maintain immutable, offline, and geographically separated backups; validate restore capability through regular tabletop and technical exercises",
+    "Audit and rotate privileged credentials regularly; monitor for credential stuffing and brute-force activity against internet-facing authentication services",
+    "Deploy SIEM detection rules for: POST requests to /api/validate, /api/login, and /x.php endpoints; unusual NtMapViewOfSection + WriteProcessMemory call chains; and VSS deletion commands (vssadmin delete shadows)",
+    "Monitor for and block abuse of LOLBins such as certutil.exe, wmic.exe, and defrag.exe in non-standard execution contexts",
+    "Subscribe to and act on CISA and FBI joint advisories for LockBit (most recent updated advisory: May 2025); implement all recommended detection signatures",
+    "Conduct regular threat-hunting operations using LockBit 5.0 MITRE ATT&CK TTPs: T1190 (Exploit Public-Facing Application), T1059 (Command and Scripting Interpreter), T1486 (Data Encrypted for Impact), T1041 (Exfiltration Over C2 Channel)",
+    "Brief security operations staff on LockBit's cartel partnerships with Qilin and DragonForce \u2014 anticipate coordinated multi-group intrusion campaigns against public sector targets"
+  ],
+  "severity": "Critical",
+  "confidence": "High"
+}
