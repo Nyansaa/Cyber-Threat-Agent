@@ -171,7 +171,7 @@ def run_agent(threat_topic: str) -> dict:
         # Send the current conversation to Claude
         response = client.messages.create(
             model=MODEL,
-            max_tokens=2000,
+            max_tokens=4000,
             system=SYSTEM_PROMPT,
             tools=TOOL_DEFINITIONS,
             messages=messages
